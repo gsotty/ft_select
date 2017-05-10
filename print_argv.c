@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:48:03 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/10 14:03:49 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/10 15:33:03 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,9 @@ void			print_argv(char **argv, t_lig_and_col *lig_col, int nbr)
 			if ((lig_col->fin_col = ((lig_col->argc) / lig_col->max_col))
 					!= 0)
 				lig_col->max_lig++;
-		//	while (!(lig_col->max_lig * lig_col->max_col <= lig_col->argc &&
-		//				lig_col->max_lig * lig_col->max_col >= lig_col->argc))
-		//		lig_col->max_col--;
+			//	while (!(lig_col->max_lig * lig_col->max_col <= lig_col->argc &&
+			//				lig_col->max_lig * lig_col->max_col >= lig_col->argc))
+			//		lig_col->max_col--;
 		}
 		else
 		{
@@ -111,10 +111,10 @@ void			print_argv(char **argv, t_lig_and_col *lig_col, int nbr)
 			if ((lig_col->fin_col = ((lig_col->argc) / lig_col->max_col))
 					!= 0)
 				lig_col->max_lig++;
-		//	while (!(lig_col->max_lig * lig_col->max_col <= lig_col->argc
-		//				+ 1 && lig_col->max_lig * lig_col->max_col >=
-		//				lig_col->argc))
-		//		lig_col->max_col--;
+			//	while (!(lig_col->max_lig * lig_col->max_col <= lig_col->argc
+			//				+ 1 && lig_col->max_lig * lig_col->max_col >=
+			//				lig_col->argc))
+			//		lig_col->max_col--;
 		}
 	}
 	else
@@ -125,7 +125,7 @@ void			print_argv(char **argv, t_lig_and_col *lig_col, int nbr)
 			lig_col->max_lig = 1;
 			//if ((lig_col->fin_col = ((lig_col->argc) / lig_col->max_col))
 			//		!= 0)
-		//		lig_col->max_lig++;
+			//		lig_col->max_lig++;
 			ft_printf("max_lig = %d\n", lig_col->max_lig);
 			while (!(lig_col->max_lig * lig_col->max_col <= lig_col->argc
 						&& lig_col->max_lig * lig_col->max_col >=
