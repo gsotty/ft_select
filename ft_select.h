@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/02 15:25:10 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/04 14:27:27 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct		s_lig_and_col
 	int				*tab_va;
 }					t_lig_and_col;
 
-void				print_argv(int argc, char **argv, t_lig_and_col *lig_col,
-		int nbr);
+void				print_argv(char **argv, t_lig_and_col *lig_col, int nbr);
 
 #endif

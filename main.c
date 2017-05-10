@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/28 12:31:26 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/02 16:59:52 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/10 13:35:28 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,69 @@ int		f_putchar(int c)
 	return (write(1, &c, 1));
 }
 
+char	**creat_arg(int argc, char **argv)
+{
+	int		x;
+	char	**arg;
+
+	x = 1;
+	if ((arg = ft_memalloc(sizeof(char *) * argc)) == NULL)
+		return (NULL);
+	while (argv[x] != NULL)
+	{
+		arg[x - 1] = ft_strdup(argv[x]);
+		x++;
+	}
+	return (arg);
+}
+
+void	free_tab(char **arg)
+{
+	int	x;
+
+	x = 0;
+	while (arg[x] != NULL)
+	{
+		free(arg[x]);
+		x++;
+	}
+	free(arg);
+}
+
+char	**del_arg(int argc, char **arg, int pos)
+{
+	int		x;
+	int		y;
+	char	**tmp_arg;
+
+	x = 0;
+	y = 0;
+	if ((tmp_arg = ft_memalloc(sizeof(char *) * argc)) == NULL)
+		return (NULL);
+	while (arg[x] != NULL)
+	{
+		if (x != pos)
+		{
+			tmp_arg[y] = ft_strdup(arg[x]);
+			y++;
+		}
+		x++;
+	}
+	free_tab(arg);
+	if ((arg = ft_memalloc(sizeof(char *) * argc - 1)) == NULL)
+		return (NULL);
+	x = 0;
+	while (tmp_arg[x] != NULL)
+	{
+		arg[x] = ft_strdup(tmp_arg[x]);
+		x++;
+	}
+	return (arg);
+}
+
 int		main(int argc, char **argv, char **env)
 {
+	char			**arg;
 	int				ret;
 	int				cont;
 	char			buf[3];
@@ -41,6 +102,7 @@ int		main(int argc, char **argv, char **env)
 	char			*test;
 	char			*name_term;
 	struct termios	term;
+	int				j;
 	int				x;
 	int				z;
 	int				max_len;
@@ -51,13 +113,35 @@ int		main(int argc, char **argv, char **env)
 	t_lig_and_col	lig_col;
 	int				pos;
 
-	pos = 1;
+	pos = 0;
 	x = 0;
 	cont = 0;
 	z = 0;
+	int		a = 0;
+	while (argv[a] != NULL)
+	{
+		ft_printf("%s\n", argv[a]);
+		a++;
+	}
+	ft_printf("1 = %d\n", a);
+	arg = creat_arg(argc, argv);
+	a = 0;
+	while (arg[a] != NULL)
+	{
+		ft_printf("%s\n", arg[a]);
+		a++;
+	}
+	ft_printf("2 = %d\n", a);
 	ft_memset(&lig_col, '\0', sizeof(t_lig_and_col));
-	if ((lig_col.tab_va = ft_memalloc(sizeof(int) * argc)) == NULL)
+	lig_col.argc = (argc - 1);
+	ft_printf("3 = %d\n", lig_col.argc);
+		ft_printf("111\n");
+	if ((lig_col.tab_va = ft_memalloc(sizeof(int) * lig_col.argc)) == NULL)
 		return (-1);
+	ft_printf("4 = %d\n", lig_col.argc);
+		ft_printf("222\n");
+	ft_printf("5 = %d\n", lig_col.argc);
+		ft_printf("333\n");
 	if ((name_term = getenv("TERM")) == NULL)
 		return (-1);
 	if (tgetent(NULL, name_term) == ERR)
@@ -73,10 +157,10 @@ int		main(int argc, char **argv, char **env)
 	ft_memset(buf, '\0', 3);
 	taille_win(&lig_col);
 	ft_memset(buf_term, '\0', MAX_CANON);
-	while (argv[x] != NULL)
+	while (arg[x] != NULL)
 	{
-		if (lig_col.max_len < ft_strlen(argv[x]))
-			lig_col.max_len = ft_strlen(argv[x]);
+		if (lig_col.max_len < ft_strlen(arg[x]))
+			lig_col.max_len = ft_strlen(arg[x]);
 		x++;
 	}
 	lig_col.max_len++;
@@ -86,36 +170,39 @@ int		main(int argc, char **argv, char **env)
 	if ((res = tgetstr("cl", NULL)) == NULL)
 		return (-1);
 	tputs(res, 0, f_putchar);
-	print_argv(argc, argv, &lig_col, 1);
+	print_argv(arg, &lig_col, 0);
 	if ((res = tgetstr("ho", NULL)) == NULL)
 		return (-1);
 	tputs(res, 0, f_putchar);
-//	if (tcgetattr(0, &term) == -1)
-//		return (-1);
-//	term.c_lflag = (ICANON | ECHO);
-//	if (tcsetattr(0, TCSADRAIN, &term) == -1)
-//		return (-1);
-//	exit(0);
-
 
 	colon = 0;
 	ligne = 0;
 	while (1)
 	{
 		taille_win(&lig_col);
+		x = 0;
+		while (arg[x] != NULL)
+		{
+			if (lig_col.max_len < ft_strlen(arg[x]))
+				lig_col.max_len = ft_strlen(arg[x]);
+			x++;
+		}
 		if ((res = tgetstr("cl", NULL)) == NULL)
 			return (-1);
 		tputs(res, 0, f_putchar);
-		print_argv(argc, argv, &lig_col, pos);
+		print_argv(arg, &lig_col, pos);
 		ft_memset(buf, '\0', 3);
 		ret = read(0, buf, 3);
-	//	ft_printf("%d, %d, %d\n", buf[0], buf[1], buf[2]);
+		ft_printf("%d, %d, %d\n", buf[0], buf[1], buf[2]);
 		if (buf[0] == 4 || (buf[0] == 27 && buf[1] == 0 && buf[2] == 0))
 		{
 			if ((res = tgetstr("ve", NULL)) == NULL)
 				return (-1);
 			tputs(res, 0, f_putchar);
 			if ((res = tgetstr("cl", NULL)) == NULL)
+				return (-1);
+			tputs(res, 0, f_putchar);
+			if ((res = tgetstr("ve", NULL)) == NULL)
 				return (-1);
 			tputs(res, 0, f_putchar);
 			if (tcgetattr(0, &term) == -1)
@@ -134,16 +221,15 @@ int		main(int argc, char **argv, char **env)
 					if ((res = tgetstr("cl", NULL)) == NULL)
 						return (-1);
 					tputs(res, 0, f_putchar);
-					if (pos > 1)
+					if (pos > 0)
 					{
-						print_argv(argc, argv, &lig_col, pos - 1);
+						print_argv(arg, &lig_col, pos - 1);
 						pos--;
-						ligne--;
 					}
 					else
 					{
-						pos = (argc - 1);
-						print_argv(argc, argv, &lig_col, pos);
+						pos = lig_col.argc - 1;
+						print_argv(arg, &lig_col, pos);
 					}
 				}
 				if (buf[2] == 'B')
@@ -151,65 +237,38 @@ int		main(int argc, char **argv, char **env)
 					if ((res = tgetstr("cl", NULL)) == NULL)
 						return (-1);
 					tputs(res, 0, f_putchar);
-					if (pos < (argc - 1))
+					if (pos < (lig_col.argc - 1))
 					{
-						print_argv(argc, argv, &lig_col, pos + 1);
+						print_argv(arg, &lig_col, pos + 1);
 						pos++;
-						ligne++;
 					}
 					else
 					{
-						pos = 1;
-						print_argv(argc, argv, &lig_col, pos);
+						pos = 0;
+						print_argv(arg, &lig_col, pos);
 					}
 				}
 				if (buf[2] == 'C')
 				{
-					if (pos < ((argc) - lig_col.max_lig))
+					if (pos < (lig_col.argc - lig_col.max_lig))
 					{
 						if ((res = tgetstr("cl", NULL)) == NULL)
 							return (-1);
 						tputs(res, 0, f_putchar);
-						print_argv(argc, argv, &lig_col,
-								pos + lig_col.max_lig);
-					//	if ((res = tgetstr("cm", NULL)) == NULL)
-					//		return (-1);
-					//	tputs(tgoto(res, colon + 1, ligne), 0, f_putchar);
+						print_argv(arg, &lig_col, pos + lig_col.max_lig);
 						pos = pos + lig_col.max_lig;
-						colon++;
 					}
-				//	else
-				//	{
-				//		if ((res = tgetstr("cm", NULL)) == NULL)
-				//			return (-1);
-				//		colon = 0;
-				//		tputs(tgoto(res, colon, ligne + 1), 0, f_putchar);
-				//		ligne++;
-				//	}
 				}
 				if (buf[2] == 'D')
 				{
-					if (pos > lig_col.max_lig)
+					if (pos > (lig_col.max_lig - 1))
 					{
 						if ((res = tgetstr("cl", NULL)) == NULL)
 							return (-1);
 						tputs(res, 0, f_putchar);
-						print_argv(argc, argv, &lig_col,
-								pos - lig_col.max_lig);
-					//	if ((res = tgetstr("cm", NULL)) == NULL)
-					//		return (-1);
-					//	tputs(tgoto(res, colon - 1, ligne), 0, f_putchar);
+						print_argv(arg, &lig_col, pos - lig_col.max_lig);
 						pos = pos - lig_col.max_lig;
-						colon--;
 					}
-				//	else
-				//	{
-				//		if ((res = tgetstr("cm", NULL)) == NULL)
-				//			return (-1);
-				//		colon = col;
-				//		tputs(tgoto(res, colon, ligne - 1), 0, f_putchar);
-				//		ligne--;
-				//	}
 				}
 			}
 		}
@@ -224,34 +283,55 @@ int		main(int argc, char **argv, char **env)
 			if ((res = tgetstr("cl", NULL)) == NULL)
 				return (-1);
 			tputs(res, 0, f_putchar);
-			if (lig_col.tab_va[pos] == pos)
+			if (lig_col.tab_va[pos] == 1)
 				lig_col.tab_va[pos] = 0;
 			else
-				lig_col.tab_va[pos] = pos;
-			if (pos < (argc - 1))
+				lig_col.tab_va[pos] = 1;
+			if (pos < (lig_col.argc - 1))
 			{
-				print_argv(argc, argv, &lig_col, pos + 1);
+				print_argv(arg, &lig_col, pos + 1);
 				pos++;
-				ligne++;
 			}
 			else
 			{
-				pos = 1;
-				print_argv(argc, argv, &lig_col, pos);
+				pos = 0;
+				print_argv(arg, &lig_col, pos);
 			}
+		}
+		else if (buf[0] == 10 && buf[1] == 0 && buf[2] == 0)
+		{
+			if ((res = tgetstr("ve", NULL)) == NULL)
+				return (-1);
+			tputs(res, 0, f_putchar);
+			if ((res = tgetstr("cl", NULL)) == NULL)
+				return (-1);
+			tputs(res, 0, f_putchar);
+			if (tcgetattr(0, &term) == -1)
+				return (-1);
+			term.c_lflag = (ICANON | ECHO);
+			if (tcsetattr(0, TCSADRAIN, &term) == -1)
+				return (-1);
+			j = 0;
+			while (j < lig_col.argc)
+			{
+				if (lig_col.tab_va[j] == 1)
+				{
+					write(0, arg[j], ft_strlen(arg[j]));
+					write(0, " ", 1);
+				}
+				j++;
+			}
+			write(0, "\n", 1);
+			return (0);
 		}
 		else if (buf[0] == 127 && buf[1] == 0 && buf[2] == 0)
 		{
-			if (colon != 0)
-			{
-				if ((res = tgetstr("cm", NULL)) == NULL)
-					return (-1);
-				tputs(tgoto(res, colon - 1, ligne), 0, f_putchar);
-				colon--;
-				if ((res = tgetstr("dc", NULL)) == NULL)
-					return (-1);
-				tputs(res, 0, f_putchar);
-			}
+			arg = del_arg(lig_col.argc, arg, pos);
+			lig_col.argc -= 1;
+			if ((res = tgetstr("cl", NULL)) == NULL)
+				return (-1);
+			tputs(res, 0, f_putchar);
+			print_argv(arg, &lig_col, pos);
 		}
 		else if (buf[0] == 126 && buf[1] == 0 && buf[2] == 0)
 		{
