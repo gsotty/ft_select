@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/10 18:21:35 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/11 11:57:09 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,12 @@
 # include "./libft/libft.h"
 # include "./ft_printf/ft_printf.h"
 
-int		ft_print_argv(int argc, char **tab);
+typedef struct		s_buf
+{
+	int		*nbr;
+	char	**tab;
+}					t_buf;
+
+int		ft_print_argv(int argc, t_buf *buf);
 
 #endif
