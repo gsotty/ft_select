@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/11 11:57:09 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/11 16:10:23 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,21 @@
 typedef struct		s_buf
 {
 	int		*nbr;
-	char	**tab;
+	int		pos;
+	int		argc;
+	int		max_len;
+	int		max_lig;
+	int		max_col;
+	char	**tab_arg;
 }					t_buf;
 
-int		ft_print_argv(int argc, t_buf *buf);
+int					f_putchar(int c);
+void				clear_win(void);
+void				return_bar(t_buf *buf);
+void				space_bar(t_buf *buf);
+void				fleche_directionnelle(char *bufer, t_buf *buf);
+void				ft_print_buf(t_buf *buf, int max_len, int len);
+void				ft_print_buf_last(t_buf *buf, int len);
+int					ft_print_argv(int argc, t_buf *buf);
 
 #endif

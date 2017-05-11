@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/04/28 12:31:26 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/10 13:35:28 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/11 13:36:06 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,31 +117,11 @@ int		main(int argc, char **argv, char **env)
 	x = 0;
 	cont = 0;
 	z = 0;
-	int		a = 0;
-	while (argv[a] != NULL)
-	{
-		ft_printf("%s\n", argv[a]);
-		a++;
-	}
-	ft_printf("1 = %d\n", a);
 	arg = creat_arg(argc, argv);
-	a = 0;
-	while (arg[a] != NULL)
-	{
-		ft_printf("%s\n", arg[a]);
-		a++;
-	}
-	ft_printf("2 = %d\n", a);
 	ft_memset(&lig_col, '\0', sizeof(t_lig_and_col));
 	lig_col.argc = (argc - 1);
-	ft_printf("3 = %d\n", lig_col.argc);
-		ft_printf("111\n");
 	if ((lig_col.tab_va = ft_memalloc(sizeof(int) * lig_col.argc)) == NULL)
 		return (-1);
-	ft_printf("4 = %d\n", lig_col.argc);
-		ft_printf("222\n");
-	ft_printf("5 = %d\n", lig_col.argc);
-		ft_printf("333\n");
 	if ((name_term = getenv("TERM")) == NULL)
 		return (-1);
 	if (tgetent(NULL, name_term) == ERR)

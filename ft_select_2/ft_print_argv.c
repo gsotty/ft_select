@@ -6,32 +6,32 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:05:18 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/11 11:57:11 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/11 15:29:25 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sys/ioctl.h>
 #include "./ft_select.h"
 
-static void		ft_while_print_argv(t_buf *buf, int max_len, int max_col,
-		int max_lig)
+static void		ft_while_print_argv(t_buf *buf)
 {
 	int		x;
 	int		y;
 	int		tmp_col;
 
 	x = 0;
-	while (x < max_lig)
+	while (x < buf->max_lig)
 	{
 		y = 0;
 		tmp_col = 0;
-		while (y < max_col && buf->tab[x + tmp_col] != NULL)
+		while (y < buf->max_col && buf->tab_arg[x + tmp_col] != NULL)
 		{
-			if ((y + 1) < max_col && buf->tab[x + tmp_col + 1] != NULL)
-				ft_printf("%-*s", max_len, buf->tab[x + tmp_col]);
+			if ((y + 1) < buf->max_col && buf->tab_arg[x
+					+ tmp_col + 1] != NULL)
+				ft_print_buf(buf, buf->max_len, (x + tmp_col));
 			else
-				ft_printf("%s", buf->tab[x + tmp_col]);
-			tmp_col = tmp_col + max_lig;
+				ft_print_buf_last(buf, (x + tmp_col));
+			tmp_col = tmp_col + buf->max_lig;
 			y++;
 		}
 		write(1, "\n", 1);
@@ -39,34 +39,31 @@ static void		ft_while_print_argv(t_buf *buf, int max_len, int max_col,
 	}
 }
 
-static void		ft_print_argv_col(int argc, t_buf *buf, int max_len,
-		struct winsize win)
+static void		ft_print_argv_col(int argc, t_buf *buf, struct winsize win)
 {
-	int		max_lig;
-	int		max_col;
 
-	max_col = 0;
-	max_lig = 1;
-	while ((max_len * (max_col + 1)) < win.ws_col)
-		max_col++;
-	while ((max_col * max_lig) <= argc && max_col > 0)
-		max_lig++;
-	while (((max_col - 1) * max_lig) > argc && max_col > 0)
-		max_col--;
-	ft_while_print_argv(buf, max_len, max_col, max_lig);
+	buf->max_col = 1;
+	buf->max_lig = 1;
+	while ((buf->max_len * (buf->max_col + 1)) < win.ws_col)
+		buf->max_col++;
+	while ((buf->max_col * buf->max_lig) <= argc && buf->max_col > 0)
+		buf->max_lig++;
+	while (((buf->max_col - 1) * buf->max_lig) > argc && buf->max_col > 0)
+		buf->max_col--;
+	ft_while_print_argv(buf);
 }
 
-static void		ft_print_argv_no_col(int argc, t_buf *buf, int max_len)
+static void		ft_print_argv_no_col(int argc, t_buf *buf)
 {
 	int		x;
 
 	x = 0;
-	while (buf->tab[x] != NULL)
+	while (buf->tab_arg[x] != NULL)
 	{
-		if (buf->tab[x + 1] != NULL)
-			ft_printf("%-*s", max_len, buf->tab[x]);
+		if (buf->tab_arg[x + 1] != NULL)
+			ft_print_buf(buf, buf->max_len, x);
 		else
-			ft_printf("%s", buf->tab[x]);
+			ft_print_buf_last(buf, x);
 		x++;
 	}
 	ft_printf("\n");
@@ -77,9 +74,10 @@ static void		ft_printf_argv_no_lig(int argc, t_buf *buf)
 	int		x;
 
 	x = 0;
-	while (buf->tab[x] != NULL)
+	while (buf->tab_arg[x] != NULL)
 	{
-		ft_printf("%s\n", buf->tab[x]);
+		ft_print_buf_last(buf, x);
+		write(1, "\n", 1);
 		x++;
 	}
 }
@@ -87,24 +85,24 @@ static void		ft_printf_argv_no_lig(int argc, t_buf *buf)
 int				ft_print_argv(int argc, t_buf *buf)
 {
 	int					x;
-	int					max_len;
 	struct winsize		win;
 
 	x = 0;
-	max_len = 0;
+	buf->argc = argc;
 	ioctl(0, TIOCGWINSZ, &win);
-	while (buf->tab[x] != NULL)
+	buf->max_len = 0;
+	while (buf->tab_arg[x] != NULL)
 	{
-		if (max_len < ft_strlen(buf->tab[x]))
-			max_len = ft_strlen(buf->tab[x]);
+		if (buf->max_len < ft_strlen(buf->tab_arg[x]))
+			buf->max_len = ft_strlen(buf->tab_arg[x]);
 		x++;
 	}
-	max_len++;
-	if (win.ws_col >= (max_len * argc))
-		ft_print_argv_no_col(argc, buf, max_len);
-	else if (win.ws_col < max_len)
+	buf->max_len++;
+	if (win.ws_col >= (buf->max_len * argc))
+		ft_print_argv_no_col(argc, buf);
+	else if (win.ws_col < buf->max_len)
 		ft_printf_argv_no_lig(argc, buf);
 	else
-		ft_print_argv_col(argc, buf, max_len, win);
+		ft_print_argv_col(argc, buf, win);
 	return (0);
 }
