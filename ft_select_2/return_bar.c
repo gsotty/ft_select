@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/11 16:07:40 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/11 16:16:15 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/12 13:34:57 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ void	return_bar(t_buf *buf)
 	int		x;
 
 	x = 0;
-	while (x < buf->argc)
+	while (x <= buf->argc)
 	{
-		if (buf->nbr[x] == 1 && buf->tab_arg[x + 1] != NULL)
-			ft_printf("%s ", buf->tab_arg[x]);
-		else if (buf->nbr[x] == 1)
-			ft_printf("%s", buf->tab_arg[x]);
+		if (buf->nbr[x] == 1)
+		{
+			write(1, buf->tab_arg[x], ft_strlen(buf->tab_arg[x]));
+			write(1, " ", 1);
+		}
 		x++;
 	}
 	write(1, "\n", 1);

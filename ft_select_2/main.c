@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:06:32 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/11 16:13:04 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/13 15:50:04 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 ** nbr[x] == 3 (souligner est surligner)
 */
 
-static int			reset_term(void)
+static int		reset_term(void)
 {
 	struct termios	term;
 	char			*name_term;
@@ -34,13 +34,13 @@ static int			reset_term(void)
 		return (-1);
 	if (tcgetattr(0, &term) == -1)
 		return (-1);
-	term.c_lflag = (ICANON | ECHO);
+	term.c_lflag |= (ICANON | ECHO);
 	if (tcsetattr(0, TCSADRAIN, &term) == -1)
 		return (-1);
 	return (0);
 }
 
-static int			prepare_term(void)
+static int		prepare_term(void)
 {
 	struct termios	term;
 	char			*name_term;
@@ -78,19 +78,45 @@ void			clear_win(void)
 	tputs(res, 0, f_putchar);
 }
 
-void			read_ft_select(int argc, t_buf *buf)
+void			signal_test(int x)
+{
+	sig = x;
+}
+
+void			read_ft_select(t_buf *buf)
 {
 	int		ret;
 	char	*res;
 	char	bufer[3];
 
 	clear_win();
-	ft_print_argv(argc - 1, buf);
+	signal(SIGINT, signal_test);
+	if (buf->argc == 0)
+	{
+		if ((res = tgetstr("ve", NULL)) == NULL)
+		{
+			clear_win();
+			reset_term();
+			exit(0);
+		}
+		tputs(res, 0, f_putchar);
+		clear_win();
+		reset_term();
+		exit(0);
+	}
+	ft_print_argv(buf);
 	ft_memset(bufer, 0, 3);
 	ret = read(0, bufer, 3);
-	ft_printf("%d\n", buf->pos);
+	signal(SIGWINCH, signal_test);
+	if (sig == 28)
+	{
+		ft_printf("bonjour\n");
+		clear_win();
+		ft_print_argv(buf);
+		sig = 0;
+	}
 	ft_printf("%d, %d, %d\n", bufer[0], bufer[1], bufer[2]);
-	if ((bufer[0] == 3 || bufer[0] == 4 || bufer[0] == 27)
+	if ((bufer[0] == 3 || bufer[0] == 4 || bufer[0] == 26 || bufer[0] == 27)
 			&& bufer[1] == 0 && bufer[2] == 0)
 	{
 		if ((res = tgetstr("ve", NULL)) == NULL)
@@ -125,6 +151,9 @@ void			read_ft_select(int argc, t_buf *buf)
 		reset_term();
 		exit(0);
 	}
+	else if ((bufer[0] == 127 || bufer[0] == 126) && bufer[1] == 0 &&
+			bufer[2] == 0)
+		delete_bar(buf);
 }
 
 int				main(int argc, char **argv)
@@ -132,7 +161,6 @@ int				main(int argc, char **argv)
 	int		x;
 	char	*res;
 	t_buf	buf;
-
 	x = 1;
 	if (argc == 1)
 		return (0);
@@ -151,9 +179,10 @@ int				main(int argc, char **argv)
 		buf.tab_arg[x - 1] = ft_strdup(argv[x]);
 		x++;
 	}
-	ft_print_argv(argc - 1, &buf);
+	buf.argc = argc - 1;
+	ft_print_argv(&buf);
 	while (1)
-		read_ft_select(argc - 1, &buf);
+		read_ft_select(&buf);
 	if ((res = tgetstr("ve", NULL)) == NULL)
 		return (-1);
 	tputs(res, 0, f_putchar);

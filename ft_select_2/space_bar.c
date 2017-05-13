@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/11 15:52:11 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/11 15:59:28 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/12 15:07:55 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	space_bar(t_buf *buf)
 		buf->nbr[buf->pos] = 1;
 	else
 		buf->nbr[buf->pos] = 0;
-	if (buf->pos < buf->argc)
+	if (buf->pos < buf->argc - 1)
 		buf->pos++;
 	else
 		buf->pos = 0;

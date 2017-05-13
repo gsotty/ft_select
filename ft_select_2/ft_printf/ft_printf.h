@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/01/20 10:40:26 by gsotty            #+#    #+#             */
-/*   Updated: 2017/04/11 12:10:14 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/12 11:11:09 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdint.h>
 # include <stdlib.h>
 # include <limits.h>
+# include <unistd.h>
 
 typedef struct		s_flag
 {

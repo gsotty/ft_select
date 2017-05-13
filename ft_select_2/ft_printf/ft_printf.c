@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 09:39:00 by gsotty            #+#    #+#             */
-/*   Updated: 2017/03/13 12:16:11 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/12 11:48:27 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int			ft_printf(const char *str, ...)
 	ft_memset(buf, 0, len.len_str);
 	if ((buf = verif_line(&len, str, buf, ap)) == NULL)
 		return (0);
-	ft_putnstr(buf, len.pos_buf);
+	write(1, buf, len.pos_buf);
 	va_end(ap);
 	if (len.null == 1)
 		len.pos_buf = -1;
