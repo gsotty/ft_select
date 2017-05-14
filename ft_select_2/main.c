@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:06:32 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/13 15:50:04 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/14 13:11:23 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <term.h>
 #include <stdlib.h>
 #include <curses.h>
+#include <signal.h>
+#include <sys/ioctl.h>
 
 /*
 ** nbr est un tab de int ou il y a 4 possibiliter
@@ -80,16 +82,23 @@ void			clear_win(void)
 
 void			signal_test(int x)
 {
+	signal(x, signal_test);
+	sig = x;
+}
+
+static void		sigaction_test(int x, siginfo_t *siginfo, void *context)
+{
 	sig = x;
 }
 
 void			read_ft_select(t_buf *buf)
 {
-	int		ret;
-	char	*res;
-	char	bufer[3];
+	int					ret;
+	char				*res;
+	char				bufer[3];
+	struct sigaction	act;
+	struct winsize		win;
 
-	clear_win();
 	signal(SIGINT, signal_test);
 	if (buf->argc == 0)
 	{
@@ -104,18 +113,29 @@ void			read_ft_select(t_buf *buf)
 		reset_term();
 		exit(0);
 	}
+	clear_win();
 	ft_print_argv(buf);
 	ft_memset(bufer, 0, 3);
-	ret = read(0, bufer, 3);
-	signal(SIGWINCH, signal_test);
-	if (sig == 28)
+	ft_memset(&act, '\0', sizeof(act));
+	ft_memset(&win, '\0', sizeof(win));
+	act.sa_sigaction = &sigaction_test;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGWINCH, &act, NULL);
+	if (sig == SIGWINCH)
 	{
-		ft_printf("bonjour\n");
-		clear_win();
-		ft_print_argv(buf);
 		sig = 0;
+		ioctl(0, TIOCGWINSZ, &win);
+		if (!(buf->col == win.ws_col && buf->lig == win.ws_row))
+		{
+			clear_win();
+			ft_print_argv(buf);
+			clear_win();
+			ft_print_argv(buf);
+		}
 	}
-	ft_printf("%d, %d, %d\n", bufer[0], bufer[1], bufer[2]);
+	ret = read(0, bufer, 3);
+	//signal(SIGWINCH, signal_test);
+//	ft_printf("%d, %d, %d\n", bufer[0], bufer[1], bufer[2]);
 	if ((bufer[0] == 3 || bufer[0] == 4 || bufer[0] == 26 || bufer[0] == 27)
 			&& bufer[1] == 0 && bufer[2] == 0)
 	{
@@ -180,7 +200,7 @@ int				main(int argc, char **argv)
 		x++;
 	}
 	buf.argc = argc - 1;
-	ft_print_argv(&buf);
+//	ft_print_argv(&buf);
 	while (1)
 		read_ft_select(&buf);
 	if ((res = tgetstr("ve", NULL)) == NULL)

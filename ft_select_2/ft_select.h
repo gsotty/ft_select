@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/13 15:43:28 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/14 13:04:13 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ typedef struct		s_buf
 	int		*nbr;
 	int		pos;
 	int		argc;
+	int		col;
+	int		lig;
 	int		max_len;
 	int		max_lig;
 	int		max_col;

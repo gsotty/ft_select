@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/11 14:22:44 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/13 14:51:05 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/14 12:58:46 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,11 @@ void	fleche_directionnelle(char *bufer, t_buf *buf)
 	}
 	if (bufer[2] == 'C')
 	{
-		ft_printf("%d\n", buf->max_lig);
 		if (buf->pos < (buf->argc - buf->max_lig))
 			buf->pos = buf->pos + buf->max_lig;
 	}
 	if (bufer[2] == 'D')
 	{
-		ft_printf("%d\n", buf->max_lig);
 		if (buf->pos >= buf->max_lig)
 			buf->pos = buf->pos - buf->max_lig;
 	}

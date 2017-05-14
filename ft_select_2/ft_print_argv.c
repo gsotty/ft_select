@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:05:18 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/13 14:54:26 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/14 13:05:34 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int				ft_print_argv(t_buf *buf)
 	x = 0;
 	ioctl(0, TIOCGWINSZ, &win);
 	buf->max_len = 0;
+	buf->col = win.ws_col;
+	buf->lig = win.ws_row;
 	while (buf->tab_arg[x] != NULL)
 	{
 		if (buf->max_len < ft_strlen(buf->tab_arg[x]))
