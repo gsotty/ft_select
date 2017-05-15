@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:05:18 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/14 13:05:34 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/15 14:30:24 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void		ft_while_print_argv(t_buf *buf)
 					+ tmp_col + 1] != NULL)
 				ft_print_buf(buf, buf->max_len, (x + tmp_col));
 			else
-			ft_print_buf_last(buf, (x + tmp_col));
+				ft_print_buf_last(buf, (x + tmp_col));
 			tmp_col = tmp_col + buf->max_lig;
 			y++;
 		}
