@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 15:55:40 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/15 16:54:09 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/17 18:05:52 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ void		read_ft_select(t_buf *buf)
 	struct sigaction	act;
 	struct winsize		win;
 
-	signal(SIGTSTP, &signal_tstp);
+	ft_memset(&act, '\0', sizeof(act));
+	act.sa_sigaction = &signal_tstp;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGTSTP, &act, NULL);
 	signal(SIGCONT, &signal_cont);
 	if (buf->argc == 0)
 	{
@@ -37,8 +40,8 @@ void		read_ft_select(t_buf *buf)
 	tputs(tgetstr("cl", NULL), 0, f_putchar);
 	ft_print_argv(buf);
 	ft_memset(bufer, 0, 3);
-	ft_memset(&act, '\0', sizeof(act));
 	ft_memset(&win, '\0', sizeof(win));
+	ft_memset(&act, '\0', sizeof(act));
 	act.sa_sigaction = &signal_int;
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &act, NULL);
@@ -70,10 +73,6 @@ void		read_ft_select(t_buf *buf)
 		tputs(tgetstr("cl", NULL), 0, f_putchar);
 		reset_term();
 		exit(0);
-	}
-	else if (bufer[0] == -61 && bufer[1] == 10 && bufer[2] == 0)
-	{
-		ft_printf("??\n");
 	}
 	else if (bufer[0] == 27)
 	{

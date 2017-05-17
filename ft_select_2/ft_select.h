@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/15 16:43:04 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/17 13:08:17 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void				read_ft_select(t_buf *buf);
 void				signal_int(int x, siginfo_t *siginfo, void *context);
 int					reset_term(void);
 int					prepare_term(void);
-void				signal_tstp(int x);
+void				signal_tstp(int x, siginfo_t *siginfo, void *context);
 void				signal_cont(int x);
 int					singletons(int x);
 int					f_putchar(int c);

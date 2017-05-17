@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 16:00:52 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/15 16:51:56 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/17 13:29:30 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,21 @@
 
 void	signal_int(int x, siginfo_t *siginfo, void *context)
 {
+	if (siginfo)
+	{}
+	if (context)
+	{}
 	singletons(x);
 }
 
-void	signal_tstp(int x)
+void	signal_tstp(int x, siginfo_t *siginfo, void *context)
 {
 	char	*res;
 
+	if (siginfo)
+	{}
+	if (context)
+	{}
 	if ((res = tgetstr("ve", NULL)) == NULL)
 	{
 		tputs(tgetstr("cl", NULL), 0, f_putchar);
@@ -38,6 +46,8 @@ void	signal_cont(int x)
 {
 	char	*res;
 
+	if (x)
+	{}
 	prepare_term();
 	if ((res = tgetstr("vi", NULL)) == NULL)
 		return ;
