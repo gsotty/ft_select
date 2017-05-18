@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/02 08:55:15 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/18 13:00:56 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/18 15:24:38 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define FT_SELECT_H
 
 # include "./libft/libft.h"
-# include "./ft_printf/ft_printf.h"
 # include <unistd.h>
 # include <term.h>
 # include <stdlib.h>
@@ -47,9 +46,12 @@ int					f_putchar(int c);
 void				delete_bar(t_buf *buf);
 void				return_bar(t_buf *buf);
 void				space_bar(t_buf *buf);
-void				fleche_directionnelle(char *bufer, t_buf *buf);
-void				ft_print_buf(t_buf *buf, int max_len, int len);
-void				ft_print_buf_last(t_buf *buf, int len);
+void				fleche_directionnelle(char *buffer, t_buf *buf);
 int					ft_print_argv(t_buf *buf);
+void				print_sur(t_buf *buf, int pos, int len);
+void				print_sou(t_buf *buf, int pos, int len);
+void				print_sur_et_sou(t_buf *buf, int pos, int len);
+void				ft_exit(int x, t_buf *buf);
+void				free_buf(t_buf *buf);
 
 #endif

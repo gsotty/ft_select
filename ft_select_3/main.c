@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/10 18:06:32 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/18 14:14:51 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/18 15:26:44 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,12 @@ int				main(int argc, char **argv)
 		return (0);
 	if (prepare_term() == -1)
 		return (-1);
-	tputs(tgetstr("vi", NULL), 0, f_putchar);
-	tputs(tgetstr("cl", NULL), 0, f_putchar);
 	ft_memset(&buf, 0, sizeof(t_buf));
 	if ((struc_buf(&buf, argc, argv)) == -1)
 		return (-1);
 	while (1)
 		read_ft_select(&buf);
-	tputs(tgetstr("ve", NULL), 0, f_putchar);
-	tputs(tgetstr("cl", NULL), 0, f_putchar);
 	reset_term();
-	return (0);
+	free_buf(&buf);
+	return (1);
 }

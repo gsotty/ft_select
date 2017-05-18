@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 16:00:52 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/18 14:20:52 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/18 14:57:40 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	signal_tstp(int x, siginfo_t *siginfo, void *context)
 	if (context)
 	{
 	}
-	tputs(tgetstr("ve", NULL), 0, f_putchar);
-	tputs(tgetstr("cl", NULL), 0, f_putchar);
 	reset_term();
 	signal(x, SIG_DFL);
 	ioctl(0, TIOCSTI, "\032");

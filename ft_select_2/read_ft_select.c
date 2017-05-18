@@ -6,7 +6,7 @@
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/05/15 15:55:40 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/17 18:05:52 by gsotty           ###   ########.fr       */
+/*   Updated: 2017/05/18 12:56:46 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,12 @@ void		read_ft_select(t_buf *buf)
 
 	ft_memset(&act, '\0', sizeof(act));
 	act.sa_sigaction = &signal_tstp;
-	act.sa_flags = SA_SIGINFO;
+	act.sa_flags = SA_SIGINFO | SA_NODEFER;
 	sigaction(SIGTSTP, &act, NULL);
-	signal(SIGCONT, &signal_cont);
+	ft_memset(&act, '\0', sizeof(act));
+	act.sa_sigaction = &signal_cont;
+	act.sa_flags = SA_SIGINFO;
+	sigaction(SIGCONT, &act, NULL);
 	if (buf->argc == 0)
 	{
 		if ((res = tgetstr("ve", NULL)) == NULL)
@@ -46,9 +49,9 @@ void		read_ft_select(t_buf *buf)
 	act.sa_flags = SA_SIGINFO;
 	sigaction(SIGINT, &act, NULL);
 	sigaction(SIGWINCH, &act, NULL);
-	if (singletons(-1) == SIGWINCH)
+	if (g_sig == SIGWINCH)
 	{
-		singletons(0);
+		g_sig = 0;
 		ioctl(0, TIOCGWINSZ, &win);
 		if (!(buf->col == win.ws_col && buf->lig == win.ws_row))
 		{
@@ -60,9 +63,9 @@ void		read_ft_select(t_buf *buf)
 	}
 	read(0, bufer, 3);
 	if (((bufer[0] == 3 || bufer[0] == 4 || bufer[0] == 26 || bufer[0] == 27)
-				&& bufer[1] == 0 && bufer[2] == 0) || singletons(-1) == SIGINT)
+				&& bufer[1] == 0 && bufer[2] == 0) || g_sig == SIGINT)
 	{
-		singletons(0);
+		g_sig = 0;
 		if ((res = tgetstr("ve", NULL)) == NULL)
 		{
 			tputs(tgetstr("cl", NULL), 0, f_putchar);

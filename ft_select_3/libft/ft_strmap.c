@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   singletons.c                                       :+:      :+:    :+:   */
+/*   ft_strmap.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gsotty <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/05/15 15:59:08 by gsotty            #+#    #+#             */
-/*   Updated: 2017/05/15 16:16:10 by gsotty           ###   ########.fr       */
+/*   Created: 2016/11/06 09:35:31 by gsotty            #+#    #+#             */
+/*   Updated: 2016/11/12 17:06:44 by gsotty           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./ft_select.h"
+#include "libft.h"
+#include <stdlib.h>
 
-int		singletons(int x)
+char	*ft_strmap(char const *s, char (*f)(char))
 {
-	static int		sig = 0;
+	int		x;
+	int		len;
+	char	*tab;
 
-	if (x == -1)
-		return (sig);
-	else
-		sig = x;
-	return (sig);
+	if (s == NULL || f == NULL)
+		return (NULL);
+	x = 0;
+	len = ft_strlen(s);
+	if ((tab = (char *)malloc(sizeof(char) * len + 1)) == NULL)
+		return (NULL);
+	while (s[x] != '\0')
+	{
+		tab[x] = (f)(s[x]);
+		x++;
+	}
+	tab[x] = '\0';
+	return (tab);
 }
